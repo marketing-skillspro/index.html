@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Reporte semanal · Instagram</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+  :root{
+    --bg: #0F211C;
+    --bg-panel: #16302A;
+    --bg-panel-2: #1C3B33;
+    --gold: #E3A857;
+    --teal: #4FA595;
+    --coral: #E07856;
+    --ink: #F3EEE2;
+    --ink-dim: #A8BDB4;
+    --line: #2A4A41;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  }
+  @media (prefers-color-scheme: light){
+    :root:not([data-theme="dark"]){
+      --bg:#0F211C; --bg-panel:#16302A; --bg-panel-2:#1C3B33; --ink:#F3EEE2; --ink-dim:#A8BDB4; --line:#2A4A41;
+    }
+  }
+  * { box-sizing: border-box; }
+  body{
+    margin:0;
+    background: var(--bg);
+    color: var(--ink);
+    padding: 28px 20px 60px;
+  }
+  .wrap{ max-width: 1080px; margin: 0 auto; }
+  header{ margin-bottom: 28px; }
+  .eyebrow{ color: var(--gold); font-size: 13px; letter-spacing: 0.02em; margin: 0 0 6px; }
+  h1{ font-size: clamp(24px, 4vw, 34px); margin: 0 0 8px; font-weight: 650; letter-spacing: -0.01em; }
+  .subtitle{ color: var(--ink-dim); font-size: 14px; max-width: 60ch; line-height: 1.5; margin:0; }
+
+  .accounts{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .account-card{
+    background: var(--bg-panel);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 20px 22px;
+  }
+  .account-card h2{ font-size: 17px; margin: 0 0 14px; display:flex; align-items:center; gap:8px; }
+  .dot{ width:9px; height:9px; border-radius:50%; display:inline-block; }
+  .stat-row{ display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  .stat{ }
+  .stat .num{ font-size: 20px; font-weight: 650; line-height:1.1; }
+  .stat .lbl{ font-size: 11.5px; color: var(--ink-dim); margin-top: 3px; }
+  .stat .delta{ font-size: 11.5px; margin-top: 2px; }
+  .up{ color: var(--teal); }
+  .down{ color: var(--coral); }
+
+  .charts{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(430px, 1fr));
+    gap: 16px;
+  }
+  .chart-card{
+    background: var(--bg-panel);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 18px 20px 12px;
+  }
+  .chart-card h3{ font-size: 14px; font-weight: 600; margin: 0 0 4px; }
+  .chart-card p.note{ font-size: 12px; color: var(--ink-dim); margin: 0 0 10px; }
+  .chart-wrap{ position: relative; height: 240px; }
+
+  .note-pill{
+    display:inline-block; font-size: 11px; color: var(--gold); background: rgba(227,168,87,0.12);
+    border: 1px solid rgba(227,168,87,0.3); padding: 3px 9px; border-radius: 100px; margin-top: 6px;
+  }
+  footer{ margin-top: 30px; color: var(--ink-dim); font-size: 12px; text-align:center; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="eyebrow">Entrelingo Group · Reporte semanal de Instagram</p>
+    <h1>Lunes 7 – domingo 13 de septiembre, 2026</h1>
+    <p class="subtitle">Datos extraídos automáticamente de Windsor.ai (conector Instagram) para las cuentas de Mafe García y Entrelingo. El 13 de septiembre queda marcado como pendiente de confirmación por la API en crecimiento de seguidores.</p>
+  </header>
+
+  <section class="accounts" id="accountCards"></section>
+
+  <section class="charts">
+    <div class="chart-card">
+      <h3>Alcance diario (reach)</h3>
+      <p class="note">Cuentas alcanzadas por día, ambas marcas</p>
+      <div class="chart-wrap"><canvas id="reachChart"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <h3>Reproducciones (views)</h3>
+      <p class="note">Total de reproducciones de contenido por día</p>
+      <div class="chart-wrap"><canvas id="viewsChart"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <h3>Interacciones totales</h3>
+      <p class="note">Likes + comentarios + guardados + compartidos</p>
+      <div class="chart-wrap"><canvas id="interactionsChart"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <h3>Desglose de interacciones (semana)</h3>
+      <p class="note">Suma de la semana por tipo de interacción</p>
+      <div class="chart-wrap"><canvas id="breakdownChart"></canvas></div>
+    </div>
+  </section>
+
+  <footer>Generado a partir del conector Windsor.ai · Instagram</footer>
+</div>
+
+<script>
+const EMBEDDED_MAFE = [
+  { date: "2026-09-07", reach_1d: 11386, likes: 571, comments: 40, saves: 162, shares: 242, reposts: 27, views: 27605, total_interactions: 1289, accounts_engaged: 783, follower_count_1d: 55 },
+  { date: "2026-09-08", reach_1d: 12786, likes: 550, comments: 75, saves: 139, shares: 231, reposts: 14, views: 30285, total_interactions: 1246, accounts_engaged: 769, follower_count_1d: 55 },
+  { date: "2026-09-09", reach_1d: 19291, likes: 707, comments: 131, saves: 309, shares: 508, reposts: 21, views: 36239, total_interactions: 2185, accounts_engaged: 1198, follower_count_1d: 56 },
+  { date: "2026-09-10", reach_1d: 21617, likes: 1049, comments: 112, saves: 411, shares: 626, reposts: 17, views: 39648, total_interactions: 2848, accounts_engaged: 1565, follower_count_1d: 85 },
+  { date: "2026-09-11", reach_1d: 13410, likes: 617, comments: 95, saves: 278, shares: 324, reposts: 10, views: 34958, total_interactions: 1654, accounts_engaged: 923, follower_count_1d: 61 },
+  { date: "2026-09-12", reach_1d: 13683, likes: 597, comments: 50, saves: 168, shares: 208, reposts: 26, views: 31404, total_interactions: 1263, accounts_engaged: 760, follower_count_1d: 64 },
+  { date: "2026-09-13", reach_1d: 13382, likes: 598, comments: 63, saves: 171, shares: 182, reposts: 9, views: 28271, total_interactions: 1205, accounts_engaged: 779, follower_count_1d: null }
+];
+
+const EMBEDDED_ENTRELINGO = [
+  { date: "2026-09-07", reach_1d: 10006, likes: 339, comments: 31, saves: 174, shares: 185, reposts: 9, views: 16638, total_interactions: 924, accounts_engaged: 550, follower_count_1d: 47 },
+  { date: "2026-09-08", reach_1d: 8107, likes: 301, comments: 12, saves: 126, shares: 175, reposts: 13, views: 13235, total_interactions: 802, accounts_engaged: 498, follower_count_1d: 45 },
+  { date: "2026-09-09", reach_1d: 9595, likes: 338, comments: 32, saves: 149, shares: 187, reposts: 17, views: 19263, total_interactions: 910, accounts_engaged: 529, follower_count_1d: 42 },
+  { date: "2026-09-10", reach_1d: 10732, likes: 402, comments: 35, saves: 135, shares: 210, reposts: 18, views: 19575, total_interactions: 1010, accounts_engaged: 601, follower_count_1d: 39 },
+  { date: "2026-09-11", reach_1d: 10096, likes: 330, comments: 13, saves: 128, shares: 134, reposts: 18, views: 17144, total_interactions: 757, accounts_engaged: 498, follower_count_1d: 41 },
+  { date: "2026-09-12", reach_1d: 8423, likes: 253, comments: 16, saves: 77, shares: 99, reposts: 16, views: 15435, total_interactions: 561, accounts_engaged: 353, follower_count_1d: 27 },
+  { date: "2026-09-13", reach_1d: 8371, likes: 250, comments: 22, saves: 81, shares: 123, reposts: 7, views: 14675, total_interactions: 606, accounts_engaged: 374, follower_count_1d: null }
+];
+
+const ACCOUNTS = [
+  { key: "mafe", label: "Mafe García (@mafegarcia_au)", color: "#E3A857", data: EMBEDDED_MAFE },
+  { key: "entrelingo", label: "Entrelingo", color: "#4FA595", data: EMBEDDED_ENTRELINGO }
+];
+
+function sum(arr, k){ return arr.reduce((a,d)=>a+(d[k]||0),0); }
+function fmt(n){ return n.toLocaleString("es-CO"); }
+function dayLabel(dateStr){
+  const d = new Date(dateStr+"T00:00:00");
+  return d.toLocaleDateString("es-ES",{weekday:"short"}).replace(".","");
+}
+
+const labels = EMBEDDED_MAFE.map(d => dayLabel(d.date));
+
+// ---- Account summary cards ----
+const cardsWrap = document.getElementById("accountCards");
+ACCOUNTS.forEach(acc => {
+  const data = acc.data;
+  const totalReach = sum(data, "reach_1d");
+  const totalViews = sum(data, "views");
+  const totalInteractions = sum(data, "total_interactions");
+  const validFollowerDays = data.filter(d => d.follower_count_1d !== null);
+  const followerGain = sum(validFollowerDays, "follower_count_1d");
+  const pendingNote = data.some(d => d.follower_count_1d === null);
+
+  const card = document.createElement("div");
+  card.className = "account-card";
+  card.innerHTML = `
+    <h2><span class="dot" style="background:${acc.color}"></span>${acc.label}</h2>
+    <div class="stat-row">
+      <div class="stat"><div class="num">${fmt(totalReach)}</div><div class="lbl">Alcance semanal</div></div>
+      <div class="stat"><div class="num">${fmt(totalViews)}</div><div class="lbl">Reproducciones</div></div>
+      <div class="stat"><div class="num">${fmt(totalInteractions)}</div><div class="lbl">Interacciones</div></div>
+      <div class="stat"><div class="num">+${fmt(followerGain)}</div><div class="lbl">Seguidores nuevos${pendingNote ? '' : ''}</div>
+        ${pendingNote ? '<div class="note-pill">Pendiente API 13-sep</div>' : ''}
+      </div>
+    </div>
+  `;
+  cardsWrap.appendChild(card);
+});
+
+// ---- Chart defaults ----
+Chart.defaults.color = "#A8BDB4";
+Chart.defaults.font.family = "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+Chart.defaults.font.size = 11;
+const gridColor = "rgba(168,189,180,0.12)";
+
+function baseLineOptions(){
+  return {
+    responsive: true, maintainAspectRatio: false,
+    interaction: { mode: "index", intersect: false },
+    plugins: { legend: { position: "bottom", labels: { boxWidth: 10, padding: 14 } } },
+    scales: {
+      x: { grid: { color: gridColor } },
+      y: { grid: { color: gridColor }, beginAtZero: true }
+    }
+  };
+}
+
+new Chart(document.getElementById("reachChart"), {
+  type: "line",
+  data: {
+    labels,
+    datasets: ACCOUNTS.map(acc => ({
+      label: acc.label.split(" (")[0],
+      data: acc.data.map(d => d.reach_1d),
+      borderColor: acc.color,
+      backgroundColor: acc.color + "33",
+      fill: true, tension: 0.35, pointRadius: 3
+    }))
+  },
+  options: baseLineOptions()
+});
+
+new Chart(document.getElementById("viewsChart"), {
+  type: "line",
+  data: {
+    labels,
+    datasets: ACCOUNTS.map(acc => ({
+      label: acc.label.split(" (")[0],
+      data: acc.data.map(d => d.views),
+      borderColor: acc.color,
+      backgroundColor: acc.color + "33",
+      fill: true, tension: 0.35, pointRadius: 3
+    }))
+  },
+  options: baseLineOptions()
+});
+
+new Chart(document.getElementById("interactionsChart"), {
+  type: "bar",
+  data: {
+    labels,
+    datasets: ACCOUNTS.map(acc => ({
+      label: acc.label.split(" (")[0],
+      data: acc.data.map(d => d.total_interactions),
+      backgroundColor: acc.color,
+      borderRadius: 4,
+      maxBarThickness: 22
+    }))
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { position: "bottom", labels: { boxWidth: 10, padding: 14 } } },
+    scales: {
+      x: { grid: { display:false } },
+      y: { grid: { color: gridColor }, beginAtZero: true }
+    }
+  }
+});
+
+const breakdownTypes = ["likes","comments","saves","shares","reposts"];
+const breakdownLabels = ["Likes","Comentarios","Guardados","Compartidos","Reposts"];
+new Chart(document.getElementById("breakdownChart"), {
+  type: "bar",
+  data: {
+    labels: breakdownLabels,
+    datasets: ACCOUNTS.map(acc => ({
+      label: acc.label.split(" (")[0],
+      data: breakdownTypes.map(t => sum(acc.data, t)),
+      backgroundColor: acc.color,
+      borderRadius: 4,
+      maxBarThickness: 26
+    }))
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { position: "bottom", labels: { boxWidth: 10, padding: 14 } } },
+    scales: {
+      x: { grid: { display:false } },
+      y: { grid: { color: gridColor }, beginAtZero: true }
+    }
+  }
+});
+</script>
+</body>
+</html>
