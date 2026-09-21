@@ -65,15 +65,16 @@
     CÓMO AGREGAR UNA SEMANA NUEVA (instrucciones para Lina):
     1. Copia todo el bloque { weekLabel: ..., mafe: [...], entrelingo: [...] } de la ÚLTIMA semana en el array WEEKS de abajo.
     2. Pégalo como un nuevo elemento AL FINAL del array WEEKS (después de una coma).
-    3. Cambia "weekLabel" por el rango de fechas nuevo (ej: "14-20 sep 2026").
+    3. Cambia "weekLabel" por el rango de fechas nuevo.
     4. Reemplaza los 7 días de datos de "mafe" y "entrelingo" con los datos nuevos de Windsor.ai.
     5. Guarda el archivo, súbelo a GitHub como index.html (Commit changes).
+    IMPORTANTE: cada bloque de semana { ... } debe terminar en "} " y llevar una coma "," antes de que empiece el siguiente bloque "{ ...".
     ============================================================
   -->
   <script>
     const WEEKS = [
       {
-        weekLabel: "31-06 sep 2026",
+        weekLabel: "31 ago-6 sep 2026",
         mafe: [
           { date: "2026-08-31", reach_1d: 16224, likes: 854, comments: 61, saves: 184, shares: 227, reposts: 107, views: 31175, total_interactions: 1661, accounts_engaged: 1064, follower_count_1d: 43 },
           { date: "2026-09-01", reach_1d: 20628, likes: 996, comments: 69, saves: 441, shares: 644, reposts: 58, views: 38435, total_interactions: 2852, accounts_engaged: 1666, follower_count_1d: 146 },
@@ -81,7 +82,7 @@
           { date: "2026-09-03", reach_1d: 12933, likes: 578, comments: 43, saves: 187, shares: 304, reposts: 26, views: 28996, total_interactions: 1467, accounts_engaged: 843, follower_count_1d: 77 },
           { date: "2026-09-04", reach_1d: 10520, likes: 515, comments: 42, saves: 102, shares: 238, reposts: 16, views: 22965, total_interactions: 1152, accounts_engaged: 707, follower_count_1d: 65 },
           { date: "2026-09-05", reach_1d: 11431, likes: 604, comments: 29, saves: 127, shares: 222, reposts: 32, views: 23766, total_interactions: 1237, accounts_engaged: 733, follower_count_1d: 59 },
-          { date: "2026-09-06", reach_1d: 11378, likes: 500, comments: 25, saves: 137, shares: 237, reposts: 25, views: 21991, total_interactions: 1165, accounts_engaged: 689, follower_count_1d: null } // Pendiente API
+          { date: "2026-09-06", reach_1d: 11378, likes: 500, comments: 25, saves: 137, shares: 237, reposts: 25, views: 21991, total_interactions: 1165, accounts_engaged: 689, follower_count_1d: null }
         ],
         entrelingo: [
           { date: "2026-08-31", reach_1d: 36960, likes: 1739, comments: 144, saves: 741, shares: 1180, reposts: 59, views: 54599, total_interactions: 5044, accounts_engaged: 2823, follower_count_1d: 269 },
@@ -90,8 +91,9 @@
           { date: "2026-09-03", reach_1d: 33532, likes: 1690, comments: 127, saves: 2073, shares: 1560, reposts: 51, views: 47165, total_interactions: 7061, accounts_engaged: 3834, follower_count_1d: 111 },
           { date: "2026-09-04", reach_1d: 14644, likes: 642, comments: 31, saves: 549, shares: 420, reposts: 29, views: 22096, total_interactions: 2091, accounts_engaged: 1193, follower_count_1d: 65 },
           { date: "2026-09-05", reach_1d: 13055, likes: 552, comments: 13, saves: 346, shares: 315, reposts: 22, views: 21888, total_interactions: 1563, accounts_engaged: 893, follower_count_1d: 47 },
-          { date: "2026-09-06", reach_1d: 13517, likes: 458, comments: 12, saves: 265, shares: 268, reposts: 21, views: 22156, total_interactions: 1292, accounts_engaged: 810, follower_count_1d: null } // Pendiente API
- ] },
+          { date: "2026-09-06", reach_1d: 13517, likes: 458, comments: 12, saves: 265, shares: 268, reposts: 21, views: 22156, total_interactions: 1292, accounts_engaged: 810, follower_count_1d: null }
+        ]
+      },
       {
         weekLabel: "7-13 sep 2026",
         mafe: [
@@ -111,30 +113,30 @@
           { date: "2026-09-11", reach_1d: 10096, likes: 330, comments: 13, saves: 128, shares: 134, reposts: 18, views: 17144, total_interactions: 757, accounts_engaged: 498, follower_count_1d: 41 },
           { date: "2026-09-12", reach_1d: 8423, likes: 253, comments: 16, saves: 77, shares: 99, reposts: 16, views: 15435, total_interactions: 561, accounts_engaged: 353, follower_count_1d: 27 },
           { date: "2026-09-13", reach_1d: 8371, likes: 250, comments: 22, saves: 81, shares: 123, reposts: 7, views: 14675, total_interactions: 606, accounts_engaged: 374, follower_count_1d: null }
-        ] },
-      { 
-        weekLabel: "14-21 sep 2026",
+        ]
+      },
+      {
+        weekLabel: "14-20 sep 2026",
         mafe: [
           { date: "2026-09-14", reach_1d: 16191, likes: 710, comments: 103, saves: 284, shares: 482, reposts: 20, views: 31251, total_interactions: 2084, accounts_engaged: 1140, follower_count_1d: 70 },
-  { date: "2026-09-15", reach_1d: 15009, likes: 727, comments: 132, saves: 227, shares: 435, reposts: 20, views: 34128, total_interactions: 1981, accounts_engaged: 1071, follower_count_1d: 71 },
-  { date: "2026-09-16", reach_1d: 18317, likes: 1147, comments: 224, saves: 257, shares: 607, reposts: 24, views: 44219, total_interactions: 2868, accounts_engaged: 1588, follower_count_1d: 122 },
-  { date: "2026-09-17", reach_1d: 17194, likes: 878, comments: 180, saves: 232, shares: 499, reposts: 19, views: 44607, total_interactions: 2346, accounts_engaged: 1282, follower_count_1d: 90 },
-  { date: "2026-09-18", reach_1d: 28110, likes: 948, comments: 135, saves: 403, shares: 742, reposts: 29, views: 62264, total_interactions: 3019, accounts_engaged: 1637, follower_count_1d: 90 },
-  { date: "2026-09-19", reach_1d: 19391, likes: 563, comments: 108, saves: 221, shares: 408, reposts: 22, views: 38708, total_interactions: 1737, accounts_engaged: 1008, follower_count_1d: 73 },
-  { date: "2026-09-20", reach_1d: 16475, likes: 600, comments: 134, saves: 243, shares: 317, reposts: 10, views: 35805, total_interactions: 1629, accounts_engaged: 939, follower_count_1d: null } 
-],
- 
-entrelingo: [
-  { date: "2026-09-14", reach_1d: 7318, likes: 200, comments: 18, saves: 68, shares: 130, reposts: 12, views: 12862, total_interactions: 561, accounts_engaged: 322, follower_count_1d: 25 },
-  { date: "2026-09-15", reach_1d: 7033, likes: 220, comments: 19, saves: 75, shares: 155, reposts: 5, views: 13472, total_interactions: 630, accounts_engaged: 353, follower_count_1d: 26 },
-  { date: "2026-09-16", reach_1d: 20203, likes: 515, comments: 45, saves: 190, shares: 395, reposts: 29, views: 38489, total_interactions: 1570, accounts_engaged: 876, follower_count_1d: 45 },
-  { date: "2026-09-17", reach_1d: 72167, likes: 567, comments: 36, saves: 222, shares: 264, reposts: 20, views: 105464, total_interactions: 1373, accounts_engaged: 923, follower_count_1d: 64 },
-  { date: "2026-09-18", reach_1d: 9517, likes: 181, comments: 28, saves: 69, shares: 95, reposts: 11, views: 17111, total_interactions: 479, accounts_engaged: 286, follower_count_1d: 32 },
-  { date: "2026-09-19", reach_1d: 8703, likes: 209, comments: 7, saves: 122, shares: 102, reposts: 10, views: 16599, total_interactions: 552, accounts_engaged: 363, follower_count_1d: 19 },
-  { date: "2026-09-20", reach_1d: 9402, likes: 291, comments: 9, saves: 152, shares: 177, reposts: 13, views: 23367, total_interactions: 820, accounts_engaged: 515, follower_count_1d: null } 
-] },
-        // <-- para agregar la próxima semana, pon una coma aquí arriba y pega un nuevo bloque { weekLabel: ..., mafe: [...], entrelingo: [...] }
+          { date: "2026-09-15", reach_1d: 15009, likes: 727, comments: 132, saves: 227, shares: 435, reposts: 20, views: 34128, total_interactions: 1981, accounts_engaged: 1071, follower_count_1d: 71 },
+          { date: "2026-09-16", reach_1d: 18317, likes: 1147, comments: 224, saves: 257, shares: 607, reposts: 24, views: 44219, total_interactions: 2868, accounts_engaged: 1588, follower_count_1d: 122 },
+          { date: "2026-09-17", reach_1d: 17194, likes: 878, comments: 180, saves: 232, shares: 499, reposts: 19, views: 44607, total_interactions: 2346, accounts_engaged: 1282, follower_count_1d: 90 },
+          { date: "2026-09-18", reach_1d: 28110, likes: 948, comments: 135, saves: 403, shares: 742, reposts: 29, views: 62264, total_interactions: 3019, accounts_engaged: 1637, follower_count_1d: 90 },
+          { date: "2026-09-19", reach_1d: 19391, likes: 563, comments: 108, saves: 221, shares: 408, reposts: 22, views: 38708, total_interactions: 1737, accounts_engaged: 1008, follower_count_1d: 73 },
+          { date: "2026-09-20", reach_1d: 16475, likes: 600, comments: 134, saves: 243, shares: 317, reposts: 10, views: 35805, total_interactions: 1629, accounts_engaged: 939, follower_count_1d: null }
+        ],
+        entrelingo: [
+          { date: "2026-09-14", reach_1d: 7318, likes: 200, comments: 18, saves: 68, shares: 130, reposts: 12, views: 12862, total_interactions: 561, accounts_engaged: 322, follower_count_1d: 25 },
+          { date: "2026-09-15", reach_1d: 7033, likes: 220, comments: 19, saves: 75, shares: 155, reposts: 5, views: 13472, total_interactions: 630, accounts_engaged: 353, follower_count_1d: 26 },
+          { date: "2026-09-16", reach_1d: 20203, likes: 515, comments: 45, saves: 190, shares: 395, reposts: 29, views: 38489, total_interactions: 1570, accounts_engaged: 876, follower_count_1d: 45 },
+          { date: "2026-09-17", reach_1d: 72167, likes: 567, comments: 36, saves: 222, shares: 264, reposts: 20, views: 105464, total_interactions: 1373, accounts_engaged: 923, follower_count_1d: 64 },
+          { date: "2026-09-18", reach_1d: 9517, likes: 181, comments: 28, saves: 69, shares: 95, reposts: 11, views: 17111, total_interactions: 479, accounts_engaged: 286, follower_count_1d: 32 },
+          { date: "2026-09-19", reach_1d: 8703, likes: 209, comments: 7, saves: 122, shares: 102, reposts: 10, views: 16599, total_interactions: 552, accounts_engaged: 363, follower_count_1d: 19 },
+          { date: "2026-09-20", reach_1d: 9402, likes: 291, comments: 9, saves: 152, shares: 177, reposts: 13, views: 23367, total_interactions: 820, accounts_engaged: 515, follower_count_1d: null }
+        ]
       }
+      // <-- para agregar la próxima semana, pon una coma justo aquí arriba y pega un nuevo bloque { weekLabel: ..., mafe: [...], entrelingo: [...] }
     ];
   </script>
 
@@ -249,10 +251,8 @@ function renderWeek(idx){
   activeWeekIdx = idx;
   const week = WEEKS[idx];
 
-  // tabs
   tabsWrap.querySelectorAll(".week-tab").forEach((el,i) => el.classList.toggle("active", i===idx));
 
-  // account cards
   const cardsWrap = document.getElementById("accountCards");
   cardsWrap.innerHTML = "";
   ACCOUNT_META.forEach(acc => {
@@ -278,7 +278,6 @@ function renderWeek(idx){
     cardsWrap.appendChild(card);
   });
 
-  // daily charts
   const labels = week.mafe.map(d => dayLabel(d.date));
   if (dailyReachChart) dailyReachChart.destroy();
   if (dailyViewsChart) dailyViewsChart.destroy();
@@ -310,6 +309,9 @@ WEEKS.forEach((w, i) => {
 });
 
 renderWeek(activeWeekIdx);
+</script>
+</body>
+</html>
 </script>
 </body>
 </html>
