@@ -2,45 +2,77 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Reporte Instagram · Histórico semanal</title>
+<title>Dashboard Instagram · KPIs mensuales</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <style>
   :root{
-    --bg: #0F211C;
-    --bg-panel: #16302A;
-    --gold: #E3A857;
-    --teal: #4FA595;
-    --coral: #E07856;
-    --ink: #F3EEE2;
-    --ink-dim: #A8BDB4;
-    --line: #2A4A41;
+    --bg: #0F211C; --bg-panel: #16302A; --bg-panel-2: #1C3B33;
+    --gold: #E3A857; --teal: #4FA595; --coral: #E07856;
+    --ink: #F3EEE2; --ink-dim: #A8BDB4; --line: #2A4A41;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
   }
   * { box-sizing: border-box; }
   body{ margin:0; background: var(--bg); color: var(--ink); padding: 28px 20px 60px; }
-  .wrap{ max-width: 1080px; margin: 0 auto; }
-  header{ margin-bottom: 24px; }
+  .wrap{ max-width: 1120px; margin: 0 auto; }
+  header{ margin-bottom: 22px; display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:12px; }
   .eyebrow{ color: var(--gold); font-size: 13px; margin: 0 0 6px; }
-  h1{ font-size: clamp(22px, 4vw, 32px); margin: 0 0 8px; font-weight: 650; letter-spacing: -0.01em; }
-  .subtitle{ color: var(--ink-dim); font-size: 14px; max-width: 65ch; line-height: 1.5; margin:0; }
+  h1{ font-size: clamp(22px, 4vw, 30px); margin: 0 0 6px; font-weight: 650; letter-spacing: -0.01em; }
+  .subtitle{ color: var(--ink-dim); font-size: 13px; max-width: 60ch; line-height: 1.5; margin:0; }
+  .updated-pill{ font-size: 12.5px; color: var(--ink-dim); background: var(--bg-panel); border: 1px solid var(--line); padding: 6px 14px; border-radius: 100px; white-space:nowrap; }
+  .updated-pill b{ color: var(--ink); }
 
-  section{ margin-bottom: 30px; }
-  h2.section-title{ font-size: 15px; color: var(--ink); margin: 0 0 14px; padding-bottom: 8px; border-bottom: 1px solid var(--line); }
+  section{ margin-bottom: 32px; }
+  h2.section-title{ font-size: 15px; color: var(--ink); margin: 0 0 14px; padding-bottom: 8px; border-bottom: 1px solid var(--line); display:flex; align-items:center; gap:8px; }
+  h2.section-title .num{ color: var(--gold); }
 
+  /* KPI cards */
+  .kpi-grid{ display:grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap:16px; }
+  .kpi-card{ background: var(--bg-panel); border: 1px solid var(--line); border-radius: 14px; padding: 20px 22px; position:relative; overflow:hidden; }
+  .kpi-card .kpi-label{ font-size: 13px; color: var(--ink-dim); margin-bottom: 10px; }
+  .kpi-card .kpi-main{ display:flex; align-items:baseline; gap:8px; margin-bottom: 4px; }
+  .kpi-card .kpi-actual{ font-size: 30px; font-weight: 700; }
+  .kpi-card .kpi-goal{ font-size: 14px; color: var(--ink-dim); }
+  .kpi-bar-track{ height: 8px; background: rgba(255,255,255,0.08); border-radius: 100px; margin: 12px 0 10px; overflow:hidden; }
+  .kpi-bar-fill{ height:100%; border-radius: 100px; }
+  .kpi-footer{ display:flex; justify-content:space-between; align-items:center; font-size: 12.5px; }
+  .status-pill{ font-size: 11.5px; font-weight: 600; padding: 3px 10px; border-radius: 100px; }
+  .status-ok{ background: rgba(79,165,149,0.18); color: var(--teal); }
+  .status-warn{ background: rgba(227,168,87,0.18); color: var(--gold); }
+  .status-bad{ background: rgba(224,120,86,0.18); color: var(--coral); }
+  .status-none{ background: rgba(168,189,180,0.14); color: var(--ink-dim); }
+  .bar-ok{ background: var(--teal); } .bar-warn{ background: var(--gold); } .bar-bad{ background: var(--coral); } .bar-none{ background: var(--ink-dim); }
+
+  /* generic charts/tables */
   .charts{ display: grid; grid-template-columns: repeat(auto-fit, minmax(430px, 1fr)); gap: 16px; }
   .chart-card{ background: var(--bg-panel); border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px 12px; }
   .chart-card h3{ font-size: 14px; font-weight: 600; margin: 0 0 4px; }
   .chart-card p.note{ font-size: 12px; color: var(--ink-dim); margin: 0 0 10px; }
   .chart-wrap{ position: relative; height: 230px; }
 
-  .week-tabs{ display:flex; gap:8px; flex-wrap:wrap; margin-bottom: 18px; }
-  .week-tab{
-    background: var(--bg-panel); border: 1px solid var(--line); color: var(--ink-dim);
-    padding: 7px 14px; border-radius: 100px; font-size: 13px; cursor: pointer;
-  }
-  .week-tab.active{ background: var(--gold); color: #1A1206; border-color: var(--gold); font-weight: 600; }
+  table.simple{ width:100%; border-collapse: collapse; font-size: 13px; }
+  table.simple th, table.simple td{ text-align:left; padding: 9px 10px; border-bottom: 1px solid var(--line); }
+  table.simple th{ color: var(--ink-dim); font-weight: 600; font-size: 12px; }
+  table.simple td.num{ font-variant-numeric: tabular-nums; }
 
+  /* JobPRO */
+  .jobpro-card{ background: var(--bg-panel); border: 1px solid var(--line); border-radius: 14px; padding: 22px 24px; display:flex; gap:28px; flex-wrap:wrap; align-items:center; }
+  .jobpro-note{ font-size: 12.5px; color: var(--ink-dim); max-width: 46ch; }
+
+  /* Top posts */
+  .posts-grid{ display:grid; gap:12px; }
+  .post-row{ background: var(--bg-panel); border:1px solid var(--line); border-radius: 12px; padding: 14px 18px; display:grid; grid-template-columns: 28px 1fr auto; gap:14px; align-items:center; }
+  .post-rank{ font-size: 18px; font-weight: 700; color: var(--gold); }
+  .post-caption{ font-size: 13.5px; line-height:1.4; }
+  .post-caption a{ color: var(--ink); text-decoration:none; border-bottom:1px dotted var(--ink-dim); }
+  .post-meta{ font-size: 11.5px; color: var(--ink-dim); margin-top: 4px; }
+  .post-stats{ display:flex; gap:16px; text-align:right; }
+  .post-stats .s{ font-size: 15px; font-weight: 650; }
+  .post-stats .l{ font-size: 10.5px; color: var(--ink-dim); }
+
+  .week-tabs{ display:flex; gap:8px; flex-wrap:wrap; margin-bottom: 18px; }
+  .week-tab{ background: var(--bg-panel); border: 1px solid var(--line); color: var(--ink-dim); padding: 7px 14px; border-radius: 100px; font-size: 13px; cursor: pointer; }
+  .week-tab.active{ background: var(--gold); color: #1A1206; border-color: var(--gold); font-weight: 600; }
   .accounts{ display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; margin-bottom: 20px; }
   .account-card{ background: var(--bg-panel); border: 1px solid var(--line); border-radius: 14px; padding: 20px 22px; }
   .account-card h3{ font-size: 16px; margin: 0 0 14px; display:flex; align-items:center; gap:8px; }
@@ -55,22 +87,72 @@
 <body>
 <div class="wrap">
   <header>
-    <p class="eyebrow">Entrelingo Group · Instagram</p>
-    <h1>Progreso semanal</h1>
-    <p class="subtitle">Cada semana se agrega un bloque nuevo de datos (ver instrucciones al final del código). Este panel muestra la tendencia entre semanas y el detalle diario de la semana seleccionada.</p>
+    <div>
+      <p class="eyebrow">Entrelingo Group · Instagram + JobPRO</p>
+      <h1>Cumplimiento de metas del mes</h1>
+      <p class="subtitle">KPIs mensuales primero, detalle de apoyo (alcance, reproducciones, interacciones) al final.</p>
+    </div>
+    <div class="updated-pill" id="updatedPill"></div>
   </header>
 
-  <!--
-    ============================================================
-    CÓMO AGREGAR UNA SEMANA NUEVA (instrucciones para Lina):
-    1. Copia todo el bloque { weekLabel: ..., mafe: [...], entrelingo: [...] } de la ÚLTIMA semana en el array WEEKS de abajo.
-    2. Pégalo como un nuevo elemento AL FINAL del array WEEKS (después de una coma).
-    3. Cambia "weekLabel" por el rango de fechas nuevo.
-    4. Reemplaza los 7 días de datos de "mafe" y "entrelingo" con los datos nuevos de Windsor.ai.
-    5. Guarda el archivo, súbelo a GitHub como index.html (Commit changes).
-    IMPORTANTE: cada bloque de semana { ... } debe terminar en "} " y llevar una coma "," antes de que empiece el siguiente bloque "{ ...".
-    ============================================================
-  -->
+  <script>
+    const GOALS = {
+      mafe_followers_month: 2500,
+      entrelingo_followers_month: 1000,
+      jobpro_leads_month: 5
+    };
+  </script>
+
+  <script>
+    const JOBPRO = {
+      month: "2026-09",
+      leads_mtd: null
+    };
+  </script>
+
+  <script>
+    const POSTS = [
+      { account_name: "entrelingo", media_id: "18162358957489525", timestamp: "2026-09-16T23:10:04+0000", media_type: "REELS", media_product_type: "REELS", media_caption: "Hay bandas que has escuchado toda la vida sin saber que llevan sangre australiana. 🎸🇦🇺 …", media_permalink: "https://www.instagram.com/reel/DdXbxWQB6k3/", media_reach: 10765, media_views: 13732, media_like_count: 559, media_comments_count: 83, media_saved: 128, media_shares: 232, media_engagement: 1029, media_follows: null, media_profile_visits: null },
+      { account_name: "entrelingo", media_id: "18124131994847585", timestamp: "2026-09-17T01:30:02+0000", media_type: "CAROUSEL_ALBUM", media_product_type: "FEED", media_caption: "🚨 Hoy, el gobierno australiano presentó su nuevo plan para reducir la migración… …", media_permalink: "https://www.instagram.com/p/DdXry44ATKq/", media_reach: 80306, media_views: 114769, media_like_count: 377, media_comments_count: 8, media_saved: 155, media_shares: 240, media_engagement: 793, media_follows: 47, media_profile_visits: 189 },
+      { account_name: "entrelingo", media_id: "18107887922159956", timestamp: "2026-09-21T23:34:22+0000", media_type: "IMAGE", media_product_type: "FEED", media_caption: "🚨 WEBINAR GRATUITO — Marketing, Negocios y Administración 🇦🇺 …", media_permalink: "https://www.instagram.com/p/DdkV8-qhkCg/", media_reach: 537, media_views: 997, media_like_count: 11, media_comments_count: 9, media_saved: 3, media_shares: 3, media_engagement: 27, media_follows: 0, media_profile_visits: 5 }
+    ];
+  </script>
+
+  <script>
+    const LAST_UPDATED = "2026-09-27";
+  </script>
+
+  <section>
+    <h2 class="section-title"><span class="num">1.</span> KPIs del mes</h2>
+    <div class="kpi-grid" id="kpiGrid"></div>
+  </section>
+
+  <section>
+    <h2 class="section-title"><span class="num">2.</span> Seguidores por mes</h2>
+    <div class="charts">
+      <div class="chart-card">
+        <h3>Seguidores nuevos por mes</h3>
+        <p class="note">Acumulado por cuenta, mes a mes</p>
+        <div class="chart-wrap"><canvas id="monthlyFollowersChart"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3>Mes actual vs meta</h3>
+        <p class="note">Acumulado, meta, % y proyección al ritmo actual</p>
+        <table class="simple" id="monthTable"></table>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section-title"><span class="num">3.</span> JobPRO · Leads B2B desde orgánico</h2>
+    <div class="jobpro-card" id="jobproCard"></div>
+  </section>
+
+  <section>
+    <h2 class="section-title"><span class="num">4.</span> Top publicaciones de la semana</h2>
+    <div class="posts-grid" id="postsGrid"></div>
+  </section>
+
   <script>
     const WEEKS = [
       {
@@ -135,56 +217,43 @@
           { date: "2026-09-19", reach_1d: 8703, likes: 209, comments: 7, saves: 122, shares: 102, reposts: 10, views: 16599, total_interactions: 552, accounts_engaged: 363, follower_count_1d: 19 },
           { date: "2026-09-20", reach_1d: 9402, likes: 291, comments: 9, saves: 152, shares: 177, reposts: 13, views: 23367, total_interactions: 820, accounts_engaged: 515, follower_count_1d: null }
         ]
+      },
+      {
+        weekLabel: "21-27 sep 2026",
+        mafe: [
+          { date: "2026-09-21", reach_1d: 20006, likes: 536, comments: 168, saves: 208, shares: 281, reposts: 14, views: 45845, total_interactions: 1495, accounts_engaged: 843, follower_count_1d: 82 },
+          { date: "2026-09-22", reach_1d: 15118, likes: 514, comments: 142, saves: 190, shares: 271, reposts: 11, views: 34802, total_interactions: 1400, accounts_engaged: 804, follower_count_1d: 54 },
+          { date: "2026-09-23", reach_1d: 12831, likes: 495, comments: 70, saves: 195, shares: 185, reposts: 11, views: 31497, total_interactions: 1148, accounts_engaged: 695, follower_count_1d: 60 },
+          { date: "2026-09-24", reach_1d: 10998, likes: 314, comments: 80, saves: 119, shares: 212, reposts: 6, views: 24945, total_interactions: 952, accounts_engaged: 478, follower_count_1d: 36 },
+          { date: "2026-09-25", reach_1d: 12600, likes: 394, comments: 47, saves: 106, shares: 152, reposts: 16, views: 36702, total_interactions: 883, accounts_engaged: 512, follower_count_1d: 28 },
+          { date: "2026-09-26", reach_1d: 13233, likes: 464, comments: 45, saves: 109, shares: 203, reposts: 11, views: 42482, total_interactions: 1044, accounts_engaged: 617, follower_count_1d: 44 },
+          { date: "2026-09-27", reach_1d: 14594, likes: 601, comments: 57, saves: 190, shares: 367, reposts: 20, views: 30535, total_interactions: 1604, accounts_engaged: 844, follower_count_1d: 53 }
+        ],
+        entrelingo: [
+          { date: "2026-09-21", reach_1d: 10173, likes: 540, comments: 45, saves: 136, shares: 233, reposts: 23, views: 19286, total_interactions: 1210, accounts_engaged: 721, follower_count_1d: 31 },
+          { date: "2026-09-22", reach_1d: 11783, likes: 321, comments: 34, saves: 116, shares: 188, reposts: 13, views: 20499, total_interactions: 862, accounts_engaged: 489, follower_count_1d: 25 },
+          { date: "2026-09-23", reach_1d: 15199, likes: 325, comments: 36, saves: 119, shares: 167, reposts: 12, views: 28050, total_interactions: 827, accounts_engaged: 525, follower_count_1d: 24 },
+          { date: "2026-09-24", reach_1d: 8739, likes: 240, comments: 18, saves: 51, shares: 168, reposts: 10, views: 15481, total_interactions: 655, accounts_engaged: 352, follower_count_1d: 20 },
+          { date: "2026-09-25", reach_1d: 8857, likes: 190, comments: 10, saves: 83, shares: 127, reposts: 4, views: 15736, total_interactions: 541, accounts_engaged: 327, follower_count_1d: 18 },
+          { date: "2026-09-26", reach_1d: 13347, likes: 296, comments: 11, saves: 84, shares: 66, reposts: 4, views: 22874, total_interactions: 527, accounts_engaged: 396, follower_count_1d: 21 },
+          { date: "2026-09-27", reach_1d: 10225, likes: 186, comments: 30, saves: 105, shares: 82, reposts: 3, views: 19934, total_interactions: 488, accounts_engaged: 310, follower_count_1d: 25 }
+        ]
       }
-      // <-- para agregar la próxima semana, pon una coma justo aquí arriba y pega un nuevo bloque { weekLabel: ..., mafe: [...], entrelingo: [...] }
     ];
   </script>
 
   <section>
-    <h2 class="section-title">Tendencia entre semanas</h2>
-    <div class="charts">
-      <div class="chart-card">
-        <h3>Alcance semanal (reach)</h3>
-        <p class="note">Suma de alcance por semana, por cuenta</p>
-        <div class="chart-wrap"><canvas id="trendReach"></canvas></div>
-      </div>
-      <div class="chart-card">
-        <h3>Reproducciones semanales</h3>
-        <p class="note">Suma de views por semana, por cuenta</p>
-        <div class="chart-wrap"><canvas id="trendViews"></canvas></div>
-      </div>
-      <div class="chart-card">
-        <h3>Interacciones semanales</h3>
-        <p class="note">Likes + comentarios + guardados + compartidos + reposts</p>
-        <div class="chart-wrap"><canvas id="trendInteractions"></canvas></div>
-      </div>
-      <div class="chart-card">
-        <h3>Seguidores nuevos por semana</h3>
-        <p class="note">Suma de follower_count_1d (días confirmados por API)</p>
-        <div class="chart-wrap"><canvas id="trendFollowers"></canvas></div>
-      </div>
-    </div>
-  </section>
-
-  <section>
-    <h2 class="section-title">Detalle diario por semana</h2>
+    <h2 class="section-title"><span class="num">5.</span> Detalle de apoyo — alcance, reproducciones e interacciones</h2>
     <div class="week-tabs" id="weekTabs"></div>
     <div class="accounts" id="accountCards"></div>
     <div class="charts">
-      <div class="chart-card">
-        <h3>Alcance diario</h3>
-        <div class="chart-wrap"><canvas id="dailyReach"></canvas></div>
-      </div>
-      <div class="chart-card">
-        <h3>Reproducciones diarias</h3>
-        <div class="chart-wrap"><canvas id="dailyViews"></canvas></div>
-      </div>
+      <div class="chart-card"><h3>Alcance diario</h3><div class="chart-wrap"><canvas id="dailyReach"></canvas></div></div>
+      <div class="chart-card"><h3>Reproducciones diarias</h3><div class="chart-wrap"><canvas id="dailyViews"></canvas></div></div>
     </div>
   </section>
 
-  <footer>Entrelingo Group · Datos vía Windsor.ai (conector Instagram)</footer>
+  <footer>Entrelingo Group · Datos vía Windsor.ai (conector Instagram) + carga manual (JobPRO, publicaciones)</footer>
 </div>
-
 <script>
 const ACCOUNT_META = [
   { key: "mafe", label: "Mafe García", color: "#E3A857" },
@@ -192,57 +261,198 @@ const ACCOUNT_META = [
 ];
 
 function sum(arr, k){ return arr.reduce((a,d)=>a+(d[k]||0),0); }
-function fmt(n){ return n.toLocaleString("es-CO"); }
-function dayLabel(dateStr){
-  const d = new Date(dateStr+"T00:00:00");
-  return d.toLocaleDateString("es-ES",{weekday:"short"}).replace(".","");
+function fmt(n){ return (n===null||n===undefined) ? "N/D" : Math.round(n).toLocaleString("es-CO"); }
+function pct(n){ return Math.round(n*100)+"%"; }
+function dayLabel(dateStr){ const d = new Date(dateStr+"T00:00:00"); return d.toLocaleDateString("es-ES",{weekday:"short"}).replace(".",""); }
+function monthKey(dateStr){ return dateStr.slice(0,7); }
+function monthLabel(key){
+  const [y,m] = key.split("-");
+  const d = new Date(parseInt(y), parseInt(m)-1, 1);
+  return d.toLocaleDateString("es-ES",{month:"long", year:"numeric"});
 }
-function weekTotal(week, accKey, field){
-  return sum(week[accKey], field);
+function daysInMonth(key){
+  const [y,m] = key.split("-").map(Number);
+  return new Date(y, m, 0).getDate();
 }
 
 Chart.defaults.color = "#A8BDB4";
 Chart.defaults.font.family = "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
 Chart.defaults.font.size = 11;
 const gridColor = "rgba(168,189,180,0.12)";
-
-function trendOptions(){
-  return {
-    responsive: true, maintainAspectRatio: false,
-    interaction: { mode: "index", intersect: false },
-    plugins: { legend: { position: "bottom", labels: { boxWidth: 10, padding: 14 } } },
-    scales: { x: { grid: { color: gridColor } }, y: { grid: { color: gridColor }, beginAtZero: true } }
-  };
+function baseOpts(){
+  return { responsive:true, maintainAspectRatio:false, interaction:{mode:"index",intersect:false},
+    plugins:{legend:{position:"bottom",labels:{boxWidth:10,padding:14}}},
+    scales:{x:{grid:{color:gridColor}}, y:{grid:{color:gridColor}, beginAtZero:true}} };
 }
+
+function flattenDays(accKey){
+  let days = [];
+  WEEKS.forEach(w => w[accKey].forEach(d => days.push(d)));
+  days.sort((a,b) => a.date.localeCompare(b.date));
+  return days;
+}
+const ALL_DAYS = { mafe: flattenDays("mafe"), entrelingo: flattenDays("entrelingo") };
+const LAST_DATA_DATE = ALL_DAYS.mafe[ALL_DAYS.mafe.length-1].date;
+const CURRENT_MONTH = monthKey(LAST_DATA_DATE);
+
+function monthlyTotals(accKey){
+  const totals = {};
+  ALL_DAYS[accKey].forEach(d => {
+    if (d.follower_count_1d === null) return;
+    const mk = monthKey(d.date);
+    totals[mk] = (totals[mk]||0) + d.follower_count_1d;
+  });
+  return totals;
+}
+const MONTHLY = { mafe: monthlyTotals("mafe"), entrelingo: monthlyTotals("entrelingo") };
+const ALL_MONTHS = [...new Set([...Object.keys(MONTHLY.mafe), ...Object.keys(MONTHLY.entrelingo)])].sort();
+
+function projection(accKey){
+  const elapsedDay = parseInt(LAST_DATA_DATE.split("-")[2]);
+  const totalDays = daysInMonth(CURRENT_MONTH);
+  const soFar = MONTHLY[accKey][CURRENT_MONTH] || 0;
+  return Math.round((soFar/elapsedDay)*totalDays);
+}
+
+function statusFromRatio(actual, projected, goal){
+  if (actual >= goal) return {label:"Meta cumplida", cls:"ok"};
+  const ratio = projected/goal;
+  if (ratio >= 0.95) return {label:"Bien encaminada", cls:"ok"};
+  if (ratio >= 0.75) return {label:"En riesgo", cls:"warn"};
+  return {label:"Crítico", cls:"bad"};
+}
+
+document.getElementById("updatedPill").innerHTML = `Última actualización: <b>${LAST_UPDATED}</b>`;
+
+const kpiGrid = document.getElementById("kpiGrid");
+function renderKpiCard({label, actual, goal, status, extraNote}){
+  const ratio = Math.min(actual/goal, 1);
+  const card = document.createElement("div");
+  card.className = "kpi-card";
+  card.innerHTML = `
+    <div class="kpi-label">${label}</div>
+    <div class="kpi-main"><span class="kpi-actual">${fmt(actual)}</span><span class="kpi-goal">/ ${fmt(goal)} meta</span></div>
+    <div class="kpi-bar-track"><div class="kpi-bar-fill bar-${status.cls}" style="width:${pct(ratio)}"></div></div>
+    <div class="kpi-footer">
+      <span>${actual===null? "—" : pct(actual/goal)} cumplido</span>
+      <span class="status-pill status-${status.cls}">${status.label}</span>
+    </div>
+    ${extraNote ? `<div style="margin-top:8px;font-size:11.5px;color:var(--ink-dim)">${extraNote}</div>` : ""}
+  `;
+  kpiGrid.appendChild(card);
+}
+
+ACCOUNT_META.forEach(acc => {
+  const goalKey = acc.key + "_followers_month";
+  const goal = GOALS[goalKey];
+  const actual = MONTHLY[acc.key][CURRENT_MONTH] || 0;
+  const proj = projection(acc.key);
+  const status = statusFromRatio(actual, proj, goal);
+  renderKpiCard({
+    label: `Seguidores ${acc.label} — ${monthLabel(CURRENT_MONTH)}`,
+    actual, goal, status,
+    extraNote: `Proyección a fin de mes: ~${fmt(proj)}`
+  });
+});
+
+(function(){
+  const goal = GOALS.jobpro_leads_month;
+  const actual = JOBPRO.leads_mtd;
+  if (actual === null){
+    kpiGrid.insertAdjacentHTML("beforeend", `
+      <div class="kpi-card">
+        <div class="kpi-label">Leads B2B JobPRO (orgánico) — ${monthLabel(CURRENT_MONTH)}</div>
+        <div class="kpi-main"><span class="kpi-actual">—</span><span class="kpi-goal">/ ${goal} meta</span></div>
+        <div class="kpi-bar-track"><div class="kpi-bar-fill bar-none" style="width:0%"></div></div>
+        <div class="kpi-footer"><span>Sin dato aún</span><span class="status-pill status-none">Sin dato</span></div>
+      </div>`);
+  } else {
+    const elapsedDay = parseInt(LAST_DATA_DATE.split("-")[2]);
+    const totalDays = daysInMonth(CURRENT_MONTH);
+    const expectedPace = goal*(elapsedDay/totalDays);
+    const status = statusFromRatio(actual, actual >= goal ? actual : (actual/expectedPace)*goal, goal);
+    renderKpiCard({ label: `Leads B2B JobPRO (orgánico) — ${monthLabel(CURRENT_MONTH)}`, actual, goal, status });
+  }
+})();
+
+new Chart(document.getElementById("monthlyFollowersChart"), {
+  type: "bar",
+  data: {
+    labels: ALL_MONTHS.map(monthLabel),
+    datasets: ACCOUNT_META.map(acc => ({
+      label: acc.label,
+      data: ALL_MONTHS.map(mk => MONTHLY[acc.key][mk] || 0),
+      backgroundColor: acc.color, borderRadius: 4, maxBarThickness: 40
+    }))
+  },
+  options: { ...baseOpts(), scales:{ x:{grid:{display:false}}, y:{grid:{color:gridColor}, beginAtZero:true} } }
+});
+
+(function(){
+  const tbl = document.getElementById("monthTable");
+  const prevMonthIdx = ALL_MONTHS.indexOf(CURRENT_MONTH) - 1;
+  const prevMonth = prevMonthIdx >= 0 ? ALL_MONTHS[prevMonthIdx] : null;
+  let rows = `<tr><th>Cuenta</th><th>Acumulado</th><th>Meta</th><th>%</th><th>Proyección</th><th>Mes anterior</th></tr>`;
+  ACCOUNT_META.forEach(acc => {
+    const goal = GOALS[acc.key+"_followers_month"];
+    const actual = MONTHLY[acc.key][CURRENT_MONTH] || 0;
+    const proj = projection(acc.key);
+    const prev = prevMonth ? (MONTHLY[acc.key][prevMonth] || 0) : null;
+    rows += `<tr>
+      <td>${acc.label}</td>
+      <td class="num">${fmt(actual)}</td>
+      <td class="num">${fmt(goal)}</td>
+      <td class="num">${pct(actual/goal)}</td>
+      <td class="num">~${fmt(proj)}</td>
+      <td class="num">${prev===null ? "N/D (parcial)" : fmt(prev)}</td>
+    </tr>`;
+  });
+  tbl.innerHTML = rows;
+})();
+
+(function(){
+  const card = document.getElementById("jobproCard");
+  const goal = GOALS.jobpro_leads_month;
+  if (JOBPRO.leads_mtd === null){
+    card.innerHTML = `<div class="jobpro-note">Todavía no hay un número cargado para leads B2B de JobPRO este mes. Actualiza <code>JOBPRO.leads_mtd</code> en el código cuando definan de dónde sale el dato (CRM, formulario, WhatsApp, etc.). Meta del mes: <b>${goal}</b> leads.</div>`;
+  } else {
+    card.innerHTML = `
+      <div><div class="kpi-actual" style="font-size:34px">${JOBPRO.leads_mtd}</div><div class="kpi-label">Leads B2B acumulados — ${monthLabel(JOBPRO.month)}</div></div>
+      <div class="jobpro-note">Meta del mes: <b>${goal}</b> leads B2B desde contenido orgánico. Este número se carga manualmente (JOBPRO.leads_mtd) hasta que definan una fuente automática.</div>
+    `;
+  }
+})();
+
+(function(){
+  const grid = document.getElementById("postsGrid");
+  const sorted = [...POSTS].sort((a,b) => {
+    const af = a.media_follows === null ? -1 : a.media_follows;
+    const bf = b.media_follows === null ? -1 : b.media_follows;
+    if (af !== bf) return bf - af;
+    return (b.media_engagement||0) - (a.media_engagement||0);
+  }).slice(0,5);
+
+  sorted.forEach((p, i) => {
+    const acc = ACCOUNT_META.find(a => a.key === p.account_name) || {label: p.account_name, color:"#A8BDB4"};
+    const row = document.createElement("div");
+    row.className = "post-row";
+    row.innerHTML = `
+      <div class="post-rank">#${i+1}</div>
+      <div>
+        <div class="post-caption"><a href="${p.media_permalink}" target="_blank" rel="noopener">${(p.media_caption||"").slice(0,90)}</a></div>
+        <div class="post-meta">${acc.label} · ${p.media_type} · ${p.timestamp.slice(0,10)}</div>
+      </div>
+      <div class="post-stats">
+        <div><div class="s">${p.media_follows===null? "N/D" : "+"+p.media_follows}</div><div class="l">seguidores</div></div>
+        <div><div class="s">${fmt(p.media_reach)}</div><div class="l">alcance</div></div>
+        <div><div class="s">${fmt(p.media_engagement)}</div><div class="l">interacciones</div></div>
+      </div>
+    `;
+    grid.appendChild(row);
+  });
+})();
 
 const weekLabels = WEEKS.map(w => w.weekLabel);
-
-function makeTrendChart(canvasId, field, chartType){
-  new Chart(document.getElementById(canvasId), {
-    type: chartType || "line",
-    data: {
-      labels: weekLabels,
-      datasets: ACCOUNT_META.map(acc => ({
-        label: acc.label,
-        data: WEEKS.map(w => weekTotal(w, acc.key, field)),
-        borderColor: acc.color,
-        backgroundColor: chartType === "bar" ? acc.color : acc.color + "33",
-        fill: chartType !== "bar",
-        tension: 0.3,
-        pointRadius: 4,
-        borderRadius: chartType === "bar" ? 4 : 0
-      }))
-    },
-    options: trendOptions()
-  });
-}
-
-makeTrendChart("trendReach", "reach_1d");
-makeTrendChart("trendViews", "views");
-makeTrendChart("trendInteractions", "total_interactions", "bar");
-makeTrendChart("trendFollowers", "follower_count_1d", "bar");
-
-// ---- Week tabs + daily detail ----
 let activeWeekIdx = WEEKS.length - 1;
 const tabsWrap = document.getElementById("weekTabs");
 let dailyReachChart, dailyViewsChart;
@@ -250,7 +460,6 @@ let dailyReachChart, dailyViewsChart;
 function renderWeek(idx){
   activeWeekIdx = idx;
   const week = WEEKS[idx];
-
   tabsWrap.querySelectorAll(".week-tab").forEach((el,i) => el.classList.toggle("active", i===idx));
 
   const cardsWrap = document.getElementById("accountCards");
@@ -281,37 +490,21 @@ function renderWeek(idx){
   const labels = week.mafe.map(d => dayLabel(d.date));
   if (dailyReachChart) dailyReachChart.destroy();
   if (dailyViewsChart) dailyViewsChart.destroy();
-
   dailyReachChart = new Chart(document.getElementById("dailyReach"), {
-    type: "line",
-    data: { labels, datasets: ACCOUNT_META.map(acc => ({
-      label: acc.label, data: week[acc.key].map(d => d.reach_1d),
-      borderColor: acc.color, backgroundColor: acc.color+"33", fill:true, tension:0.35, pointRadius:3
-    }))},
-    options: trendOptions()
+    type:"line", data:{ labels, datasets: ACCOUNT_META.map(acc => ({ label: acc.label, data: week[acc.key].map(d=>d.reach_1d), borderColor:acc.color, backgroundColor:acc.color+"33", fill:true, tension:0.35, pointRadius:3 })) }, options: baseOpts()
   });
   dailyViewsChart = new Chart(document.getElementById("dailyViews"), {
-    type: "line",
-    data: { labels, datasets: ACCOUNT_META.map(acc => ({
-      label: acc.label, data: week[acc.key].map(d => d.views),
-      borderColor: acc.color, backgroundColor: acc.color+"33", fill:true, tension:0.35, pointRadius:3
-    }))},
-    options: trendOptions()
+    type:"line", data:{ labels, datasets: ACCOUNT_META.map(acc => ({ label: acc.label, data: week[acc.key].map(d=>d.views), borderColor:acc.color, backgroundColor:acc.color+"33", fill:true, tension:0.35, pointRadius:3 })) }, options: baseOpts()
   });
 }
 
-WEEKS.forEach((w, i) => {
+WEEKS.forEach((w,i) => {
   const tab = document.createElement("div");
-  tab.className = "week-tab";
-  tab.textContent = w.weekLabel;
+  tab.className = "week-tab"; tab.textContent = w.weekLabel;
   tab.addEventListener("click", () => renderWeek(i));
   tabsWrap.appendChild(tab);
 });
-
 renderWeek(activeWeekIdx);
-</script>
-</body>
-</html>
 </script>
 </body>
 </html>
