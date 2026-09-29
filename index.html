@@ -26,7 +26,6 @@
   h2.section-title{ font-size: 15px; color: var(--ink); margin: 0 0 14px; padding-bottom: 8px; border-bottom: 1px solid var(--line); display:flex; align-items:center; gap:8px; }
   h2.section-title .num{ color: var(--gold); }
 
-  /* KPI cards */
   .kpi-grid{ display:grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap:16px; }
   .kpi-card{ background: var(--bg-panel); border: 1px solid var(--line); border-radius: 14px; padding: 20px 22px; position:relative; overflow:hidden; }
   .kpi-card .kpi-label{ font-size: 13px; color: var(--ink-dim); margin-bottom: 10px; }
@@ -43,7 +42,6 @@
   .status-none{ background: rgba(168,189,180,0.14); color: var(--ink-dim); }
   .bar-ok{ background: var(--teal); } .bar-warn{ background: var(--gold); } .bar-bad{ background: var(--coral); } .bar-none{ background: var(--ink-dim); }
 
-  /* generic charts/tables */
   .charts{ display: grid; grid-template-columns: repeat(auto-fit, minmax(430px, 1fr)); gap: 16px; }
   .chart-card{ background: var(--bg-panel); border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px 12px; }
   .chart-card h3{ font-size: 14px; font-weight: 600; margin: 0 0 4px; }
@@ -55,11 +53,9 @@
   table.simple th{ color: var(--ink-dim); font-weight: 600; font-size: 12px; }
   table.simple td.num{ font-variant-numeric: tabular-nums; }
 
-  /* JobPRO */
   .jobpro-card{ background: var(--bg-panel); border: 1px solid var(--line); border-radius: 14px; padding: 22px 24px; display:flex; gap:28px; flex-wrap:wrap; align-items:center; }
   .jobpro-note{ font-size: 12.5px; color: var(--ink-dim); max-width: 46ch; }
 
-  /* Top posts */
   .posts-grid{ display:grid; gap:12px; }
   .post-row{ background: var(--bg-panel); border:1px solid var(--line); border-radius: 12px; padding: 14px 18px; display:grid; grid-template-columns: 28px 1fr auto; gap:14px; align-items:center; }
   .post-rank{ font-size: 18px; font-weight: 700; color: var(--gold); }
@@ -114,7 +110,29 @@
     const POSTS = [
       { account_name: "entrelingo", media_id: "18162358957489525", timestamp: "2026-09-16T23:10:04+0000", media_type: "REELS", media_product_type: "REELS", media_caption: "Hay bandas que has escuchado toda la vida sin saber que llevan sangre australiana. 🎸🇦🇺 …", media_permalink: "https://www.instagram.com/reel/DdXbxWQB6k3/", media_reach: 10765, media_views: 13732, media_like_count: 559, media_comments_count: 83, media_saved: 128, media_shares: 232, media_engagement: 1029, media_follows: null, media_profile_visits: null },
       { account_name: "entrelingo", media_id: "18124131994847585", timestamp: "2026-09-17T01:30:02+0000", media_type: "CAROUSEL_ALBUM", media_product_type: "FEED", media_caption: "🚨 Hoy, el gobierno australiano presentó su nuevo plan para reducir la migración… …", media_permalink: "https://www.instagram.com/p/DdXry44ATKq/", media_reach: 80306, media_views: 114769, media_like_count: 377, media_comments_count: 8, media_saved: 155, media_shares: 240, media_engagement: 793, media_follows: 47, media_profile_visits: 189 },
-      { account_name: "entrelingo", media_id: "18107887922159956", timestamp: "2026-09-21T23:34:22+0000", media_type: "IMAGE", media_product_type: "FEED", media_caption: "🚨 WEBINAR GRATUITO — Marketing, Negocios y Administración 🇦🇺 …", media_permalink: "https://www.instagram.com/p/DdkV8-qhkCg/", media_reach: 537, media_views: 997, media_like_count: 11, media_comments_count: 9, media_saved: 3, media_shares: 3, media_engagement: 27, media_follows: 0, media_profile_visits: 5 }
+      { account_name: "entrelingo", media_id: "18107887922159956", timestamp: "2026-09-21T23:34:22+0000", media_type: "IMAGE", media_product_type: "FEED", media_caption: "🚨 WEBINAR GRATUITO — Marketing, Negocios y Administración 🇦🇺 …", media_permalink: "https://www.instagram.com/p/DdkV8-qhkCg/", media_reach: 537, media_views: 997, media_like_count: 11, media_comments_count: 9, media_saved: 3, media_shares: 3, media_engagement: 27, media_follows: 0, media_profile_visits: 5 },
+      { account_name: "mafegarcia_au", timestamp: "2026-09-21T04:00:09+0000", media_type: "REELS", media_product_type: "REELS", media_caption: "Algunos vienen a Australia para ahorrar y volver... otros descubren que acá es donde realmente pueden empezar de nuevo.", media_permalink: "https://www.instagram.com/reel/DdiQK4DBpQF/", media_reach: 13551, media_follows: null, media_shares: 29, media_saved: 28, media_like_count: 164, media_comments_count: 71, media_views: 28478, media_engagement: 292, media_profile_visits: null },
+      { account_name: "mafegarcia_au", timestamp: "2026-09-26T01:00:12+0000", media_type: "REELS", media_product_type: "REELS", media_caption: "Las medidas por regulación migratoria: bajar la migración neta a 245,000 este año.", media_permalink: "https://www.instagram.com/reel/Dduzf6mPLEx/", media_reach: 9734, media_follows: null, media_shares: 14, media_saved: 12, media_like_count: 31, media_comments_count: 0, media_views: 19726, media_engagement: 57, media_profile_visits: null },
+      { account_name: "mafegarcia_au", timestamp: "2026-09-27T22:00:06+0000", media_type: "REELS", media_product_type: "REELS", media_caption: "Cockatoo Island, Patrimonio Mundial UNESCO, con el único dique seco construido por convictos.", media_permalink: "https://www.instagram.com/reel/DdzogHJvYTt/", media_reach: 8942, media_follows: null, media_shares: 242, media_saved: 111, media_like_count: 266, media_comments_count: 3, media_views: 10699, media_engagement: 622, media_profile_visits: null },
+      { account_name: "mafegarcia_au", timestamp: "2026-09-22T23:27:10+0000", media_type: "REELS", media_product_type: "REELS", media_caption: "Mi mamá dice la palabra en colombiano, y yo la traduzco al australiano.", media_permalink: "https://www.instagram.com/reel/Ddm6M8PzGMc/", media_reach: 7158, media_follows: null, media_shares: 18, media_saved: 43, media_like_count: 172, media_comments_count: 13, media_views: 10622, media_engagement: 246, media_profile_visits: null },
+      { account_name: "mafegarcia_au", timestamp: "2026-09-25T04:00:08+0000", media_type: "REELS", media_product_type: "REELS", media_caption: "Los australianos como documental de National Geographic - hábitos curiosos.", media_permalink: "https://www.instagram.com/reel/DdsjXnSvuQA/", media_reach: 6042, media_follows: null, media_shares: 16, media_saved: 22, media_like_count: 100, media_comments_count: 4, media_views: 13043, media_engagement: 142, media_profile_visits: null },
+      { account_name: "mafegarcia_au", timestamp: "2026-09-26T22:00:07+0000", media_type: "REELS", media_product_type: "REELS", media_caption: "La estatua de Trim, el gato del explorador Matthew Flinders, en el centro de Sídney.", media_permalink: "https://www.instagram.com/reel/DdxDudFvup6/", media_reach: 5900, media_follows: null, media_shares: 165, media_saved: 46, media_like_count: 283, media_comments_count: 3, media_views: 7643, media_engagement: 497, media_profile_visits: null },
+      { account_name: "mafegarcia_au", timestamp: "2026-09-23T22:00:06+0000", media_type: "REELS", media_product_type: "REELS", media_caption: "Residente en 6 meses, mi primera casa, mi familia, y hasta a mi mamá viviendo cerca de mí.", media_permalink: "https://www.instagram.com/reel/DdpVXUGy3LQ/", media_reach: 5469, media_follows: null, media_shares: 52, media_saved: 43, media_like_count: 164, media_comments_count: 86, media_views: 8316, media_engagement: 345, media_profile_visits: null },
+      { account_name: "mafegarcia_au", timestamp: "2026-09-23T04:00:04+0000", media_type: "REELS", media_product_type: "REELS", media_caption: "Mucha gente pregunta cómo conseguir un trabajo con sponsor en Australia (repost).", media_permalink: "https://www.instagram.com/reel/DdnZxljvzO6/", media_reach: 4180, media_follows: null, media_shares: 48, media_saved: 124, media_like_count: 150, media_comments_count: 9, media_views: 7628, media_engagement: 331, media_profile_visits: null },
+      { account_name: "mafegarcia_au", timestamp: "2026-09-21T22:15:41+0000", media_type: "REELS", media_product_type: "REELS", media_caption: "Dos historias, el mismo punto de partida, resultados totalmente distintos. Webinar 17 de octubre.", media_permalink: "https://www.instagram.com/reel/DdkNYeXTC6r/", media_reach: 4032, media_follows: null, media_shares: 70, media_saved: 34, media_like_count: 100, media_comments_count: 94, media_views: 5445, media_engagement: 298, media_profile_visits: null },
+      { account_name: "mafegarcia_au", timestamp: "2026-09-25T22:19:57+0000", media_type: "REELS", media_product_type: "REELS", media_caption: "Hay días en los que uno valora cosas que ni siquiera pensaba agradecer (sistema de salud).", media_permalink: "https://www.instagram.com/reel/Ddug51PT2xl/", media_reach: 3108, media_follows: null, media_shares: 7, media_saved: 6, media_like_count: 97, media_comments_count: 6, media_views: 4183, media_engagement: 116, media_profile_visits: null },
+      { account_name: "mafegarcia_au", timestamp: "2026-09-21T01:00:07+0000", media_type: "REELS", media_product_type: "REELS", media_caption: "Mucha gente pregunta cómo conseguir un trabajo con sponsor en Australia.", media_permalink: "https://www.instagram.com/reel/Ddh7lpxBzfr/", media_reach: 2711, media_follows: null, media_shares: 18, media_saved: 66, media_like_count: 52, media_comments_count: 0, media_views: 4634, media_engagement: 136, media_profile_visits: null },
+      { account_name: "mafegarcia_au", timestamp: "2026-09-27T03:00:02+0000", media_type: "CAROUSEL_ALBUM", media_product_type: "FEED", media_caption: "Hay frases que uno se dice a sí mismo sin darse cuenta de cuánto frenan.", media_permalink: "https://www.instagram.com/p/DdxmAmzE1kA/", media_reach: 2199, media_follows: 0, media_shares: 7, media_saved: 15, media_like_count: 98, media_comments_count: 0, media_views: 5342, media_engagement: 120, media_profile_visits: 11 },
+      { account_name: "mafegarcia_au", timestamp: "2026-09-26T12:49:15+0000", media_type: "REELS", media_product_type: "REELS", media_caption: "Honrada de haber sido invitada a la Cumbre de Emprendedores 2026 de @mpower.au.", media_permalink: "https://www.instagram.com/reel/DdwELbRzq8e/", media_reach: 1580, media_follows: null, media_shares: 4, media_saved: 8, media_like_count: 40, media_comments_count: 3, media_views: 2295, media_engagement: 55, media_profile_visits: null },
+      { account_name: "mafegarcia_au", timestamp: "2026-09-23T13:55:06+0000", media_type: "REELS", media_product_type: "REELS", media_caption: "Donde va tu foco, va tu energía. Evento con Tony Robbins - lecciones y legado.", media_permalink: "https://www.instagram.com/reel/DdodyGxPWkF/", media_reach: 1452, media_follows: null, media_shares: 0, media_saved: 0, media_like_count: 32, media_comments_count: 2, media_views: 1968, media_engagement: 34, media_profile_visits: null },
+      { account_name: "mafegarcia_au", timestamp: "2026-09-24T22:20:37+0000", media_type: "REELS", media_product_type: "REELS", media_caption: "Si el sistema migratorio australiano fuera una Mafe, definitivamente diría cosas como estas.", media_permalink: "https://www.instagram.com/reel/Ddr8gHKSVAu/", media_reach: 1444, media_follows: null, media_shares: 10, media_saved: 12, media_like_count: 42, media_comments_count: 2, media_views: 2049, media_engagement: 66, media_profile_visits: null },
+      { account_name: "mafegarcia_au", timestamp: "2026-09-22T12:02:09+0000", media_type: "CAROUSEL_ALBUM", media_product_type: "FEED", media_caption: "Migrar tiene una forma muy particular de recordarte que puedes tener experiencia, estudios y una carrera. Evento con speakers de talla mundial.", media_permalink: "https://www.instagram.com/p/DdlsEwdk7G-/", media_reach: 1428, media_follows: 0, media_shares: 0, media_saved: 0, media_like_count: 49, media_comments_count: 4, media_views: 3542, media_engagement: 53, media_profile_visits: 14 },
+      { account_name: "mafegarcia_au", timestamp: "2026-09-27T01:38:22+0000", media_type: "REELS", media_product_type: "REELS", media_caption: "A tus 30 llega un punto donde toca elegir entre lo conocido y lo que realmente quieres.", media_permalink: "https://www.instagram.com/reel/Ddxckp1zHi-/", media_reach: 1410, media_follows: null, media_shares: 2, media_saved: 7, media_like_count: 42, media_comments_count: 0, media_views: 1778, media_engagement: 51, media_profile_visits: null },
+      { account_name: "mafegarcia_au", timestamp: "2026-09-23T12:34:14+0000", media_type: "CAROUSEL_ALBUM", media_product_type: "FEED", media_caption: "Un estadio lleno en Sydney con Tony Robbins - lecciones de vida.", media_permalink: "https://www.instagram.com/p/DdoUipLk_Sw/", media_reach: 1311, media_follows: 0, media_shares: 0, media_saved: 3, media_like_count: 58, media_comments_count: 8, media_views: 3089, media_engagement: 69, media_profile_visits: 17 },
+      { account_name: "mafegarcia_au", timestamp: "2026-09-23T01:40:54+0000", media_type: "REELS", media_product_type: "REELS", media_caption: "Un buen resultado rápido casi siempre sale quemado por fuera y crudo por dentro (repost).", media_permalink: "https://www.instagram.com/reel/DdnJ3lxP4Wb/", media_reach: 1171, media_follows: null, media_shares: 1, media_saved: 2, media_like_count: 26, media_comments_count: 0, media_views: 1848, media_engagement: 29, media_profile_visits: null },
+      { account_name: "mafegarcia_au", timestamp: "2026-09-25T08:10:52+0000", media_type: "REELS", media_product_type: "REELS", media_caption: "Si eres Latino en SYDNEY, te veo este sábado y domingo en la Cumbre de Emprendedores 2026.", media_permalink: "https://www.instagram.com/reel/Dds_dTKzk7o/", media_reach: 992, media_follows: null, media_shares: 4, media_saved: 1, media_like_count: 15, media_comments_count: 6, media_views: 1374, media_engagement: 26, media_profile_visits: null },
+      { account_name: "mafegarcia_au", timestamp: "2026-09-24T03:00:03+0000", media_type: "CAROUSEL_ALBUM", media_product_type: "FEED", media_caption: "Hay un trabajo que la mayoría de migrantes conoce bien: el que aceptaste para sobrevivir. Sígueme.", media_permalink: "https://www.instagram.com/p/Ddp3tblk9G9/", media_reach: 769, media_follows: 0, media_shares: 1, media_saved: 7, media_like_count: 9, media_comments_count: 0, media_views: 1853, media_engagement: 17, media_profile_visits: 4 },
+      { account_name: "mafegarcia_au", timestamp: "2026-09-22T01:00:07+0000", media_type: "REELS", media_product_type: "REELS", media_caption: "Un buen resultado rápido casi siempre sale quemado por fuera y crudo por dentro.", media_permalink: "https://www.instagram.com/reel/DdkgXSBBVBO/", media_reach: 385, media_follows: null, media_shares: 0, media_saved: 1, media_like_count: 3, media_comments_count: 0, media_views: 512, media_engagement: 4, media_profile_visits: null }
     ];
   </script>
 
@@ -256,9 +274,12 @@
 </div>
 <script>
 const ACCOUNT_META = [
-  { key: "mafe", label: "Mafe García", color: "#E3A857" },
-  { key: "entrelingo", label: "Entrelingo", color: "#4FA595" }
+  { key: "mafe", label: "Mafe García", color: "#E3A857", aliases: ["mafe", "mafegarcia_au"] },
+  { key: "entrelingo", label: "Entrelingo", color: "#4FA595", aliases: ["entrelingo"] }
 ];
+function findAccountMeta(accountName){
+  return ACCOUNT_META.find(a => a.aliases.includes(accountName));
+}
 
 function sum(arr, k){ return arr.reduce((a,d)=>a+(d[k]||0),0); }
 function fmt(n){ return (n===null||n===undefined) ? "N/D" : Math.round(n).toLocaleString("es-CO"); }
@@ -433,7 +454,7 @@ new Chart(document.getElementById("monthlyFollowersChart"), {
   }).slice(0,5);
 
   sorted.forEach((p, i) => {
-    const acc = ACCOUNT_META.find(a => a.key === p.account_name) || {label: p.account_name, color:"#A8BDB4"};
+    const acc = findAccountMeta(p.account_name) || {label: p.account_name, color:"#A8BDB4"};
     const row = document.createElement("div");
     row.className = "post-row";
     row.innerHTML = `
