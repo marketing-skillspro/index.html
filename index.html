@@ -7,20 +7,22 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <style>
   :root{
-    --bg: #0F211C; --bg-panel: #16302A; --bg-panel-2: #1C3B33;
-    --gold: #E3A857; --teal: #4FA595; --coral: #E07856;
-    --ink: #F3EEE2; --ink-dim: #A8BDB4; --line: #2A4A41;
+    --bg: #ffffff; --bg-panel: #ffffff; --bg-soft: #f5f7fa;
+    --navy: #0d1e39; --teal: #39bb9b;
+    --ink: #0d1e39; --ink-dim: #5b6b82; --line: #e2e8f0;
+    --ok: #1f9a7e; --warn: #b7791f; --bad: #c2410c;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
   }
   * { box-sizing: border-box; }
   body{ margin:0; background: var(--bg); color: var(--ink); padding: 28px 20px 60px; }
   .wrap{ max-width: 1120px; margin: 0 auto; }
   header{ margin-bottom: 22px; display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:12px; }
-  .eyebrow{ color: var(--gold); font-size: 13px; margin: 0 0 6px; }
-  h1{ font-size: clamp(22px, 4vw, 30px); margin: 0 0 6px; font-weight: 650; letter-spacing: -0.01em; }
+  .eyebrow{ color: var(--ok); font-size: 13px; font-weight: 600; margin: 0 0 6px; }
+  h1{ font-size: clamp(22px, 4vw, 30px); margin: 0 0 6px; font-weight: 700; letter-spacing: -0.01em; }
   .subtitle{ color: var(--ink-dim); font-size: 13px; max-width: 60ch; line-height: 1.5; margin:0; }
-  .updated-pill{ font-size: 12.5px; color: var(--ink-dim); background: var(--bg-panel); border: 1px solid var(--line); padding: 6px 14px; border-radius: 100px; white-space:nowrap; }
+  .updated-pill{ font-size: 12.5px; color: var(--ink-dim); background: var(--bg-soft); border: 1px solid var(--line); padding: 6px 14px; border-radius: 100px; white-space:nowrap; }
   .updated-pill b{ color: var(--ink); }
+  code{ background: #eef2f7; padding: 1px 5px; border-radius: 4px; font-size: 12px; }
 
   .month-bar{ display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom: 26px; }
   .month-bar-label{ font-size: 13px; color: var(--ink-dim); }
@@ -28,27 +30,28 @@
 
   section{ margin-bottom: 32px; }
   h2.section-title{ font-size: 15px; color: var(--ink); margin: 0 0 14px; padding-bottom: 8px; border-bottom: 1px solid var(--line); display:flex; align-items:center; gap:8px; }
-  h2.section-title .num{ color: var(--gold); }
+  h2.section-title .num{ color: var(--ok); }
 
   .kpi-grid{ display:grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap:16px; }
-  .kpi-card{ background: var(--bg-panel); border: 1px solid var(--line); border-radius: 14px; padding: 20px 22px; position:relative; overflow:hidden; }
+  .kpi-card{ background: var(--bg-panel); border: 1px solid var(--line); border-radius: 14px; padding: 24px 22px 20px; position:relative; overflow:hidden; box-shadow: 0 1px 3px rgba(13,30,57,0.06); }
+  .kpi-accent{ position:absolute; top:0; left:0; right:0; height:6px; }
   .kpi-card .kpi-label{ font-size: 13px; color: var(--ink-dim); margin-bottom: 10px; }
   .kpi-card .kpi-main{ display:flex; align-items:baseline; gap:8px; margin-bottom: 4px; }
   .kpi-card .kpi-actual{ font-size: 30px; font-weight: 700; }
   .kpi-card .kpi-goal{ font-size: 14px; color: var(--ink-dim); }
-  .kpi-bar-track{ height: 8px; background: rgba(255,255,255,0.08); border-radius: 100px; margin: 12px 0 10px; overflow:hidden; }
+  .kpi-bar-track{ height: 8px; background: rgba(13,30,57,0.08); border-radius: 100px; margin: 12px 0 10px; overflow:hidden; }
   .kpi-bar-fill{ height:100%; border-radius: 100px; }
   .kpi-footer{ display:flex; justify-content:space-between; align-items:center; font-size: 12.5px; }
   .kpi-note{ margin-top:8px; font-size:11.5px; color:var(--ink-dim); line-height:1.4; }
   .status-pill{ font-size: 11.5px; font-weight: 600; padding: 3px 10px; border-radius: 100px; }
-  .status-ok{ background: rgba(79,165,149,0.18); color: var(--teal); }
-  .status-warn{ background: rgba(227,168,87,0.18); color: var(--gold); }
-  .status-bad{ background: rgba(224,120,86,0.18); color: var(--coral); }
-  .status-none{ background: rgba(168,189,180,0.14); color: var(--ink-dim); }
-  .bar-ok{ background: var(--teal); } .bar-warn{ background: var(--gold); } .bar-bad{ background: var(--coral); } .bar-none{ background: var(--ink-dim); }
+  .status-ok{ background: rgba(57,187,155,0.16); color: #17806a; }
+  .status-warn{ background: rgba(240,182,74,0.22); color: #8a5a0a; }
+  .status-bad{ background: rgba(232,100,60,0.15); color: #b43a14; }
+  .status-none{ background: rgba(13,30,57,0.07); color: var(--ink-dim); }
+  .bar-ok{ background: #39bb9b; } .bar-warn{ background: #f0b64a; } .bar-bad{ background: #e8643c; } .bar-none{ background: #aab4c3; }
 
   .charts{ display: grid; grid-template-columns: repeat(auto-fit, minmax(430px, 1fr)); gap: 16px; }
-  .chart-card{ background: var(--bg-panel); border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px 12px; overflow-x:auto; }
+  .chart-card{ background: var(--bg-panel); border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px 12px; overflow-x:auto; box-shadow: 0 1px 3px rgba(13,30,57,0.06); }
   .chart-card h3{ font-size: 14px; font-weight: 600; margin: 0 0 4px; }
   .chart-card p.note{ font-size: 12px; color: var(--ink-dim); margin: 0 0 10px; }
   .chart-wrap{ position: relative; height: 230px; }
@@ -59,14 +62,14 @@
   table.simple th{ color: var(--ink-dim); font-weight: 600; font-size: 12px; }
   table.simple td.num{ font-variant-numeric: tabular-nums; }
 
-  .jobpro-card{ background: var(--bg-panel); border: 1px solid var(--line); border-radius: 14px; padding: 22px 24px; display:flex; gap:28px; flex-wrap:wrap; align-items:center; }
+  .jobpro-card{ background: var(--bg-panel); border: 1px solid var(--line); border-radius: 14px; padding: 22px 24px; display:flex; gap:28px; flex-wrap:wrap; align-items:center; box-shadow: 0 1px 3px rgba(13,30,57,0.06); }
   .jobpro-note{ font-size: 12.5px; color: var(--ink-dim); max-width: 56ch; line-height:1.5; }
   .jobpro-big{ font-size: 34px; font-weight: 700; }
   .jobpro-big-label{ font-size: 13px; color: var(--ink-dim); }
 
   .posts-grid{ display:grid; gap:12px; }
-  .post-row{ background: var(--bg-panel); border:1px solid var(--line); border-radius: 12px; padding: 14px 18px; display:grid; grid-template-columns: 28px 1fr auto; gap:14px; align-items:center; }
-  .post-rank{ font-size: 18px; font-weight: 700; color: var(--gold); }
+  .post-row{ background: var(--bg-panel); border:1px solid var(--line); border-radius: 12px; padding: 14px 18px; display:grid; grid-template-columns: 28px 1fr auto; gap:14px; align-items:center; box-shadow: 0 1px 3px rgba(13,30,57,0.06); }
+  .post-rank{ font-size: 18px; font-weight: 700; color: var(--ok); }
   .post-caption{ font-size: 13.5px; line-height:1.4; }
   .post-caption a{ color: var(--ink); text-decoration:none; border-bottom:1px dotted var(--ink-dim); }
   .post-meta{ font-size: 11.5px; color: var(--ink-dim); margin-top: 4px; }
@@ -76,15 +79,15 @@
 
   .week-tabs{ display:flex; gap:8px; flex-wrap:wrap; margin-bottom: 18px; }
   .week-tab{ background: var(--bg-panel); border: 1px solid var(--line); color: var(--ink-dim); padding: 7px 14px; border-radius: 100px; font-size: 13px; cursor: pointer; }
-  .week-tab.active{ background: var(--gold); color: #1A1206; border-color: var(--gold); font-weight: 600; }
+  .week-tab.active{ background: var(--navy); color: #ffffff; border-color: var(--navy); font-weight: 600; }
   .accounts{ display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; margin-bottom: 20px; }
-  .account-card{ background: var(--bg-panel); border: 1px solid var(--line); border-radius: 14px; padding: 20px 22px; }
+  .account-card{ background: var(--bg-panel); border: 1px solid var(--line); border-radius: 14px; padding: 20px 22px; box-shadow: 0 1px 3px rgba(13,30,57,0.06); }
   .account-card h3{ font-size: 16px; margin: 0 0 14px; display:flex; align-items:center; gap:8px; }
-  .dot{ width:9px; height:9px; border-radius:50%; display:inline-block; }
+  .dot{ width:10px; height:10px; border-radius:50%; display:inline-block; border:1px solid rgba(13,30,57,0.25); vertical-align:middle; }
   .stat-row{ display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
   .stat .num{ font-size: 19px; font-weight: 650; line-height:1.1; }
   .stat .lbl{ font-size: 11px; color: var(--ink-dim); margin-top: 3px; }
-  .note-pill{ display:inline-block; font-size: 10.5px; color: var(--gold); background: rgba(227,168,87,0.12); border: 1px solid rgba(227,168,87,0.3); padding: 2px 8px; border-radius: 100px; margin-top: 6px; }
+  .note-pill{ display:inline-block; font-size: 10.5px; color: #8a5a0a; background: rgba(240,182,74,0.18); border: 1px solid rgba(240,182,74,0.5); padding: 2px 8px; border-radius: 100px; margin-top: 6px; }
   footer{ margin-top: 30px; color: var(--ink-dim); font-size: 12px; text-align:center; }
 </style>
 </head>
@@ -182,7 +185,7 @@
     ============================================================
   -->
   <script>
-    const LAST_UPDATED = "2026-10-05";
+    const LAST_UPDATED = "2026-10-13";
   </script>
 
   <section>
@@ -330,6 +333,27 @@
           { date: "2026-10-03", reach_1d: 13626, likes: 445, comments: 11, saves: 74, shares: 326, reposts: 16, views: 25538, total_interactions: 1198, accounts_engaged: 683, follower_count_1d: 22 },
           { date: "2026-10-04", reach_1d: 15322, likes: 408, comments: 20, saves: 80, shares: 233, reposts: 12, views: 23666, total_interactions: 986, accounts_engaged: 592, follower_count_1d: null }
         ]
+      },
+      {
+        weekLabel: "5-11 oct 2026",
+        mafe: [
+          { date: "2026-10-05", reach_1d: 9942, likes: 343, comments: 54, saves: 80, shares: 195, reposts: 17, views: 23600, total_interactions: 888, accounts_engaged: 481, follower_count_1d: 30 },
+          { date: "2026-10-06", reach_1d: 12983, likes: 515, comments: 66, saves: 134, shares: 357, reposts: 18, views: 29818, total_interactions: 1454, accounts_engaged: 734, follower_count_1d: 51 },
+          { date: "2026-10-07", reach_1d: 27767, likes: 732, comments: 165, saves: 225, shares: 683, reposts: 30, views: 51455, total_interactions: 2523, accounts_engaged: 1372, follower_count_1d: 85 },
+          { date: "2026-10-08", reach_1d: 17585, likes: 458, comments: 137, saves: 182, shares: 306, reposts: 10, views: 31201, total_interactions: 1422, accounts_engaged: 801, follower_count_1d: 47 },
+          { date: "2026-10-09", reach_1d: 12709, likes: 314, comments: 48, saves: 189, shares: 225, reposts: 8, views: 26966, total_interactions: 1034, accounts_engaged: 621, follower_count_1d: 37 },
+          { date: "2026-10-10", reach_1d: 11810, likes: 337, comments: 34, saves: 120, shares: 187, reposts: 13, views: 25637, total_interactions: 881, accounts_engaged: 551, follower_count_1d: 39 },
+          { date: "2026-10-11", reach_1d: 11566, likes: 331, comments: 40, saves: 100, shares: 132, reposts: 8, views: 25822, total_interactions: 745, accounts_engaged: 483, follower_count_1d: 41 }
+        ],
+        entrelingo: [
+          { date: "2026-10-05", reach_1d: 10212, likes: 258, comments: 51, saves: 53, shares: 167, reposts: 18, views: 17776, total_interactions: 714, accounts_engaged: 420, follower_count_1d: 33 },
+          { date: "2026-10-06", reach_1d: 12480, likes: 279, comments: 42, saves: 93, shares: 138, reposts: 18, views: 21664, total_interactions: 708, accounts_engaged: 429, follower_count_1d: 33 },
+          { date: "2026-10-07", reach_1d: 11420, likes: 321, comments: 57, saves: 86, shares: 152, reposts: 9, views: 21786, total_interactions: 777, accounts_engaged: 483, follower_count_1d: 26 },
+          { date: "2026-10-08", reach_1d: 21942, likes: 968, comments: 31, saves: 148, shares: 303, reposts: 134, views: 35423, total_interactions: 1887, accounts_engaged: 1225, follower_count_1d: 30 },
+          { date: "2026-10-09", reach_1d: 197085, likes: 13188, comments: 50, saves: 1377, shares: 3091, reposts: 2283, views: 318231, total_interactions: 23081, accounts_engaged: 15394, follower_count_1d: 41 },
+          { date: "2026-10-10", reach_1d: 152178, likes: 6687, comments: 24, saves: 669, shares: 1565, reposts: 1323, views: 230233, total_interactions: 11833, accounts_engaged: 8252, follower_count_1d: 41 },
+          { date: "2026-10-11", reach_1d: 87554, likes: 3578, comments: 20, saves: 402, shares: 845, reposts: 614, views: 132500, total_interactions: 6304, accounts_engaged: 4340, follower_count_1d: 36 }
+        ]
       }
       // <-- para agregar la próxima semana, pon una coma justo aquí arriba y pega un nuevo bloque { weekLabel: ..., mafe: [...], entrelingo: [...] }
     ];
@@ -352,10 +376,14 @@
   <footer>Entrelingo Group · Datos vía Windsor.ai (conector Instagram) + carga manual (JobPRO, publicaciones)</footer>
 </div>
 <script>
+// COLORES: "color" y "color2" son los de la marca. "line" es el trazo de las líneas/bordes
+// (en Mafe es un tono más oscuro del lavanda para que se vea sobre fondo blanco) y "fill" el relleno de las áreas.
 const ACCOUNT_META = [
-  { key: "mafe", label: "Mafe García", color: "#E3A857", aliases: ["mafe", "mafegarcia_au"] },
-  { key: "entrelingo", label: "Entrelingo", color: "#4FA595", aliases: ["entrelingo"] }
+  { key: "mafe", label: "Mafe García", color: "#dbdbff", color2: "#c5fe9c", line: "#8c8cdc", fill: "rgba(219,219,255,0.75)", aliases: ["mafe", "mafegarcia_au"] },
+  { key: "entrelingo", label: "Entrelingo", color: "#39bb9b", color2: "#0d1e39", line: "#39bb9b", fill: "rgba(57,187,155,0.25)", aliases: ["entrelingo"] }
 ];
+function dotStyle(acc){ return "background:linear-gradient(135deg," + acc.color + "," + (acc.color2 || acc.color) + ")"; }
+function accentGradient(acc){ return "linear-gradient(90deg," + acc.color + "," + (acc.color2 || acc.color) + ")"; }
 function findAccountMeta(accountName){
   return ACCOUNT_META.find(a => a.aliases.includes(accountName));
 }
@@ -379,10 +407,10 @@ function daysInMonth(key){
   return new Date(parts[0], parts[1], 0).getDate();
 }
 
-Chart.defaults.color = "#A8BDB4";
+Chart.defaults.color = "#5b6b82";
 Chart.defaults.font.family = "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
 Chart.defaults.font.size = 11;
-const gridColor = "rgba(168,189,180,0.12)";
+const gridColor = "rgba(13,30,57,0.08)";
 function baseOpts(){
   return { responsive:true, maintainAspectRatio:false, interaction:{mode:"index",intersect:false},
     plugins:{legend:{position:"bottom",labels:{boxWidth:10,padding:14}}},
@@ -454,6 +482,7 @@ function renderKpiCard(grid, o){
   const card = document.createElement("div");
   card.className = "kpi-card";
   card.innerHTML =
+    '<div class="kpi-accent" style="background:' + (o.accent || "#0d1e39") + '"></div>' +
     '<div class="kpi-label">' + o.label + '</div>' +
     '<div class="kpi-main"><span class="kpi-actual">' + (has ? fmt(o.actual) : "—") + '</span><span class="kpi-goal">/ ' + fmt(o.goal) + ' meta</span></div>' +
     '<div class="kpi-bar-track"><div class="kpi-bar-fill bar-' + o.status.cls + '" style="width:' + pct(ratio) + '"></div></div>' +
@@ -475,11 +504,11 @@ function renderKpis(mk){
     if (isInProgress(mk)) notes.push("Proyección a fin de mes: ~" + fmt(proj));
     const pend = pendingCount(acc.key, mk);
     if (pend > 0) notes.push(pend + " día(s) sin confirmar por la API (no suman)");
-    renderKpiCard(grid, { label: "Seguidores " + acc.label + " — " + monthLabel(mk), actual: actual, goal: goal, status: status, note: notes.join(" · ") });
+    renderKpiCard(grid, { accent: accentGradient(acc), label: "Seguidores " + acc.label + " — " + monthLabel(mk), actual: actual, goal: goal, status: status, note: notes.join(" · ") });
   });
   const leadsGoal = getGoal(mk, "jobpro_leads_month");
   const leads = JOBPRO_LEADS[mk];
-  renderKpiCard(grid, { label: "Leads B2B JobPRO (orgánico) — " + monthLabel(mk), actual: (leads === undefined ? null : leads), goal: leadsGoal, status: leadsStatus(mk, leads, leadsGoal) });
+  renderKpiCard(grid, { accent: "linear-gradient(90deg,#0d1e39,#5b6b82)", label: "Leads B2B JobPRO (orgánico) — " + monthLabel(mk), actual: (leads === undefined ? null : leads), goal: leadsGoal, status: leadsStatus(mk, leads, leadsGoal) });
 }
 
 function renderFollowers(mk){
@@ -508,8 +537,8 @@ function renderFollowers(mk){
     const chart = new Chart(card.querySelector("canvas"), {
       type: "line",
       data: { labels: labels, datasets: [
-        { label: "Acumulado", data: cum, borderColor: acc.color, backgroundColor: acc.color + "33", fill: true, tension: 0.25, pointRadius: 2, spanGaps: false },
-        { label: "Camino a la meta", data: pace, borderColor: "#A8BDB4", borderDash: [6,5], pointRadius: 0, fill: false }
+        { label: "Acumulado", data: cum, borderColor: acc.line, backgroundColor: acc.fill, borderWidth: 2, fill: true, tension: 0.25, pointRadius: 2, spanGaps: false },
+        { label: "Camino a la meta", data: pace, borderColor: "#8a97ab", borderDash: [6,5], pointRadius: 0, fill: false }
       ]},
       options: opts
     });
@@ -562,7 +591,7 @@ function renderPosts(mk){
     row.innerHTML =
       '<div class="post-rank">#' + (i+1) + '</div>' +
       '<div><div class="post-caption"><a href="' + p.media_permalink + '" target="_blank" rel="noopener">' + (p.media_caption||"").slice(0,90) + '</a></div>' +
-      '<div class="post-meta">' + acc.label + ' · ' + p.media_type + ' · ' + p.timestamp.slice(0,10) + '</div></div>' +
+      '<div class="post-meta"><span class="dot" style="' + dotStyle(acc) + '"></span> ' + acc.label + ' · ' + p.media_type + ' · ' + p.timestamp.slice(0,10) + '</div></div>' +
       '<div class="post-stats">' +
       '<div><div class="s">' + (p.media_follows === null ? "N/D" : "+" + p.media_follows) + '</div><div class="l">seguidores</div></div>' +
       '<div><div class="s">' + fmt(p.media_reach) + '</div><div class="l">alcance</div></div>' +
@@ -581,7 +610,7 @@ function renderSupport(mk){
     const card = document.createElement("div");
     card.className = "account-card";
     card.innerHTML =
-      '<h3><span class="dot" style="background:' + acc.color + '"></span>' + acc.label + '</h3>' +
+      '<h3><span class="dot" style="' + dotStyle(acc) + '"></span>' + acc.label + '</h3>' +
       '<div class="stat-row">' +
       '<div class="stat"><div class="num">' + fmt(sum(data, "reach_1d")) + '</div><div class="lbl">Alcance</div></div>' +
       '<div class="stat"><div class="num">' + fmt(sum(data, "views")) + '</div><div class="lbl">Reproducciones</div></div>' +
@@ -598,7 +627,7 @@ function renderSupport(mk){
     return ACCOUNT_META.map(acc => ({
       label: acc.label,
       data: daysIn(acc.key, mk).map(d => d[field]),
-      borderColor: acc.color, backgroundColor: acc.color + "33", fill: true, tension: 0.35, pointRadius: 3
+      borderColor: acc.line, backgroundColor: acc.fill, borderWidth: 2, fill: true, tension: 0.35, pointRadius: 3
     }));
   }
   liveCharts.push(new Chart(document.getElementById("dailyReach"), { type: "line", data: { labels: labels, datasets: lineSet("reach_1d") }, options: baseOpts() }));
@@ -652,7 +681,7 @@ new Chart(document.getElementById("monthlyFollowersChart"), {
     datasets: ACCOUNT_META.map(acc => ({
       label: acc.label,
       data: ALL_MONTHS.map(mk => followersFor(acc.key, mk)),
-      backgroundColor: acc.color, borderRadius: 4, maxBarThickness: 40
+      backgroundColor: acc.color, borderColor: acc.line, borderWidth: 1, borderRadius: 4, maxBarThickness: 40
     }))
   },
   options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{position:"bottom",labels:{boxWidth:10,padding:14}}}, scales:{ x:{grid:{display:false}}, y:{grid:{color:gridColor}, beginAtZero:true} } }
